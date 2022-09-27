@@ -10,8 +10,6 @@ import (
 
 const cowName = "cows"
 
-// TODO: fix all update handlers because they don't work
-
 // CowDatabase contains the methods to use with the cow database
 type CowDatabase interface {
 	FindOne(ctx context.Context, filter interface{}) (*models.Cow, error)

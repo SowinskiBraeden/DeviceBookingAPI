@@ -113,8 +113,6 @@ func (c Cow) NewCowHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-// TODO: fix all update handlers because they don't work
-
 // UpdateCowHandler gets updates the data for an existing cow and returns a result and error
 func (c Cow) UpdateCowHandler(w http.ResponseWriter, r *http.Request) {
 	cowID := mux.Vars(r)["cow_id"]

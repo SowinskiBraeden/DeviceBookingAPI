@@ -9,8 +9,6 @@ import (
 	"github.com/SowinskiBraeden/SulliCartShare/config"
 )
 
-// TODO: fix all update handlers because they don't work
-
 // DatabaseHelper contains the collection and client to be used to access the methods
 // defined below
 type DatabaseHelper interface {
