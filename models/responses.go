@@ -11,3 +11,14 @@ type UserResponse struct {
 	Message string                 `json:"message"`
 	Data    map[string]interface{} `json:"data"`
 }
+
+// ErrorMessageResponse returns the error message response struct
+type ErrorMessageResponse struct {
+	Response MessageError
+}
+
+// MessageError contains the inner details for the error message response
+type MessageError struct {
+	Message string
+	Error   string
+}

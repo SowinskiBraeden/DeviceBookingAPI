@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -77,23 +76,18 @@ func (c Cow) NewCowHandler(w http.ResponseWriter, r *http.Request) {
 	var cowDetails models.CowDetails // Json data will represent the cow details model
 	defer cancel()
 
-	//validate the request body
+	// validate the request body
 	if err := json.NewDecoder(r.Body).Decode(&cowDetails); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		response := models.UserResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"error": err.Error()}}
-		json.NewEncoder(w).Encode(response)
+		config.ErrorStatus("failed to unpack request body", http.StatusInternalServerError, w, err)
 		return
 	}
 
-	//use the validator library to validate required fields
+	// use the validator library to validate required fields
 	if validationErr := validate.Struct(&cowDetails); validationErr != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		response := models.UserResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"error": validationErr.Error()}}
-		json.NewEncoder(w).Encode(response)
+		config.ErrorStatus("invalid request body", http.StatusBadRequest, w, validationErr)
+
 		return
 	}
-
-	fmt.Print(cowDetails)
 
 	newCow := models.Cow{
 		ID:      primitive.NewObjectID().Hex(),
@@ -102,9 +96,7 @@ func (c Cow) NewCowHandler(w http.ResponseWriter, r *http.Request) {
 
 	result, err := c.DB.InsertOne(ctx, newCow)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		response := models.UserResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"error": err.Error()}}
-		json.NewEncoder(w).Encode(response)
+		config.ErrorStatus("failed to insert cow", http.StatusBadRequest, w, err)
 		return
 	}
 
@@ -126,7 +118,7 @@ func (c Cow) UpdateCowHandler(w http.ResponseWriter, r *http.Request) {
 
 	dbResp, err := c.DB.UpdateOne(context.Background(), bson.M{"_id": cowID}, update)
 	if err != nil {
-		config.ErrorStatus("failed to update cow by ID", http.StatusNotFound, w, err)
+		config.ErrorStatus("the cow could not be updated", http.StatusNotFound, w, err)
 		return
 	}
 
