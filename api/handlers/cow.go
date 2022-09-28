@@ -57,7 +57,7 @@ func (c Cow) CowHandlerQuery(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dbResp, err := c.DB.Find(context.TODO(), bson.M{"Detials.Name": query.Name}) // Search by cow name
+	dbResp, err := c.DB.Find(context.TODO(), bson.M{"detials.name": query.Name}) // Search by cow name
 	if err != nil {
 		config.ErrorStatus("failed to get cows", http.StatusNotFound, w, err)
 		return
