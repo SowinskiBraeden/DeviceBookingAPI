@@ -29,6 +29,7 @@ type App struct {
 func (a *App) New() *mux.Router {
 	r := mux.NewRouter()
 	cow := Cow{DB: databases.NewCowDatabase(a.dbHelper)}
+	device := Device{DB: databases.NewDeviceDatabase(a.dbHelper)}
 
 	// healthcheck
 	r.HandleFunc("/health", healthCheckHandler)
@@ -40,6 +41,12 @@ func (a *App) New() *mux.Router {
 	apiCreate.Handle("/cows", api.Middleware(http.HandlerFunc(cow.CowHandlerQuery))).Methods("POST")       // Returns list of cows based of query
 	apiCreate.Handle("/cows/new", api.Middleware(http.HandlerFunc(cow.NewCowHandler))).Methods("POST")
 	apiCreate.Handle("/cows/update/{cow_id}", api.Middleware(http.HandlerFunc(cow.UpdateCowHandler))).Methods("POST") // By Object ID not CowCode
+
+	apiCreate.Handle("/device/{device_id}", api.Middleware(http.HandlerFunc(device.DeviceByIDHandler))).Methods("GET")
+	apiCreate.Handle("/devices", api.Middleware(http.HandlerFunc(device.DeviceHandler))).Methods("GET")
+	apiCreate.Handle("/devices", api.Middleware(http.HandlerFunc(device.DeviceHandlerQuery))).Methods("POST")
+	apiCreate.Handle("/devices/new", api.Middleware(http.HandlerFunc(device.NewDeviceHandler))).Methods("POST")
+	apiCreate.Handle("/devices/update/{device_id}", api.Middleware(http.HandlerFunc(device.UpdateDeviceHandler))).Methods("POST")
 
 	return r
 }

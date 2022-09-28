@@ -96,7 +96,7 @@ func (d Device) DeviceByIDHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // NewCowHandler inserts a new cow into the collection and returns a result and error
-func (c Cow) NewDeviceHandler(w http.ResponseWriter, r *http.Request) {
+func (d Device) NewDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	var deviceDetails models.DeviceDetails // Json data will represent the cow details model
 	defer cancel()
@@ -119,7 +119,7 @@ func (c Cow) NewDeviceHandler(w http.ResponseWriter, r *http.Request) {
 		Details: deviceDetails,
 	}
 
-	result, err := c.DB.InsertOne(ctx, newDevice)
+	result, err := d.DB.InsertOne(ctx, newDevice)
 	if err != nil {
 		config.ErrorStatus("failed to insert device", http.StatusBadRequest, w, err)
 		return
@@ -131,7 +131,7 @@ func (c Cow) NewDeviceHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // UpdateCowHandler gets updates the data for an existing cow and returns a result and error
-func (c Cow) UpdateDeviceHandler(w http.ResponseWriter, r *http.Request) {
+func (d Device) UpdateDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	deviceID := mux.Vars(r)["cow_id"]
 
 	// TODO: Collect data to update from passed json
@@ -141,7 +141,7 @@ func (c Cow) UpdateDeviceHandler(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	dbResp, err := c.DB.UpdateOne(context.Background(), bson.M{"_id": deviceID}, update)
+	dbResp, err := d.DB.UpdateOne(context.Background(), bson.M{"_id": deviceID}, update)
 	if err != nil {
 		config.ErrorStatus("the device could not be updated", http.StatusNotFound, w, err)
 		return
