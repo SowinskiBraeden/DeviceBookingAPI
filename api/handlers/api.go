@@ -7,12 +7,15 @@ import (
 
 	"github.com/SowinskiBraeden/SulliCartShare/api"
 	"github.com/SowinskiBraeden/SulliCartShare/models"
+	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 
 	"github.com/SowinskiBraeden/SulliCartShare/config"
 	"github.com/SowinskiBraeden/SulliCartShare/databases"
 )
+
+var validate = validator.New()
 
 // App stores the router and db connection so it can be reused
 type App struct {
@@ -33,7 +36,8 @@ func (a *App) New() *mux.Router {
 	apiCreate := r.PathPrefix("/api/v1").Subrouter()
 
 	apiCreate.Handle("/cow/{cow_id}", api.Middleware(http.HandlerFunc(cow.CowByIDHandler))).Methods("GET") // By Object ID not CowCode
-	apiCreate.Handle("/cows", api.Middleware(http.HandlerFunc(cow.CowHandler))).Methods("GET")
+	apiCreate.Handle("/cows", api.Middleware(http.HandlerFunc(cow.CowHandler))).Methods("GET")             // Returns all cows
+	apiCreate.Handle("/cows", api.Middleware(http.HandlerFunc(cow.CowHandlerQuery))).Methods("POST")       // Returns list of cows based of query
 	apiCreate.Handle("/cows/new", api.Middleware(http.HandlerFunc(cow.NewCowHandler))).Methods("POST")
 	apiCreate.Handle("/cows/update/{cow_id}", api.Middleware(http.HandlerFunc(cow.UpdateCowHandler))).Methods("POST") // By Object ID not CowCode
 

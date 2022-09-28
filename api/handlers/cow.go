@@ -10,25 +10,54 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/go-playground/validator/v10"
-
 	"github.com/SowinskiBraeden/SulliCartShare/config"
 	"github.com/SowinskiBraeden/SulliCartShare/databases"
 	"github.com/SowinskiBraeden/SulliCartShare/models"
 )
-
-var validate = validator.New()
 
 // Cow exported for testing purposes
 type Cow struct {
 	DB databases.CowDatabase
 }
 
-// TODO: update api return messages
-
 // CowHandler returns all cows
 func (c Cow) CowHandler(w http.ResponseWriter, r *http.Request) {
 	dbResp, err := c.DB.Find(context.TODO(), bson.M{})
+	if err != nil {
+		config.ErrorStatus("failed to get cows", http.StatusNotFound, w, err)
+		return
+	}
+
+	// If len == 0 then we will just return an empty data object
+	if len(dbResp) == 0 {
+		dbResp = []models.Cow{}
+	}
+	b, err := json.Marshal(dbResp)
+	if err != nil {
+		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(b)
+}
+
+// CowHandlerQuery is the same as CowHanlder, but queries a specific list of objects by Name
+func (c Cow) CowHandlerQuery(w http.ResponseWriter, r *http.Request) {
+	var query models.Query // Json data will represent the query model
+
+	// validate the request body
+	if err := json.NewDecoder(r.Body).Decode(&query); err != nil {
+		config.ErrorStatus("failed to unpack request body", http.StatusInternalServerError, w, err)
+		return
+	}
+
+	// use the validator library to validate required fields
+	if validationErr := validate.Struct(&query); validationErr != nil {
+		config.ErrorStatus("invalid request body", http.StatusBadRequest, w, validationErr)
+		return
+	}
+
+	dbResp, err := c.DB.Find(context.TODO(), bson.M{"Detials.Name": query.Name}) // Search by cow name
 	if err != nil {
 		config.ErrorStatus("failed to get cows", http.StatusNotFound, w, err)
 		return

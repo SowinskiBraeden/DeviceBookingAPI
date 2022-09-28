@@ -1,5 +1,7 @@
 package models
 
+// This is io.go (input/output) for json queries and responses
+
 // HealthCheckResponse returns the health check response duh
 type HealthCheckResponse struct {
 	Alive bool `json:"alive"`
@@ -14,11 +16,16 @@ type UserResponse struct {
 
 // ErrorMessageResponse returns the error message response struct
 type ErrorMessageResponse struct {
-	Response MessageError
+	Response MessageError `json:"response"`
 }
 
 // MessageError contains the inner details for the error message response
 type MessageError struct {
-	Message string
-	Error   string
+	Message string `json:"message"`
+	Error   string `json:"error"`
+}
+
+// Query for search queries by name
+type Query struct {
+	Name string `json:"name"`
 }
