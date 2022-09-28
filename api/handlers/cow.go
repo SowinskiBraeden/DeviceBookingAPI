@@ -24,6 +24,8 @@ type Cow struct {
 	DB databases.CowDatabase
 }
 
+// TODO: update api return messages
+
 // CowHandler returns all cows
 func (c Cow) CowHandler(w http.ResponseWriter, r *http.Request) {
 	dbResp, err := c.DB.Find(context.TODO(), bson.M{})
