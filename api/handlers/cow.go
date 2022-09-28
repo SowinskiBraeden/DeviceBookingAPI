@@ -130,7 +130,7 @@ func (c Cow) UpdateCowHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	b, err := json.Marshal(dbResp) // TODO: get rid of this warning cause its bothering me
+	b, err := json.Marshal(dbResp)
 	if err != nil {
 		config.ErrorStatus("failed ot marshal response", http.StatusInternalServerError, w, err)
 		return

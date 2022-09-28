@@ -66,7 +66,7 @@ type mongoInsertOneResult struct {
 }
 
 type mongoUpdateResult struct {
-	ur *mongo.UpdateResult
+	Ur *mongo.UpdateResult // capital to export field to ignore error in ../api/handlers/cow.go Ln 133 Col 26
 }
 
 type mongoSession struct {
@@ -132,7 +132,7 @@ func (mc *mongoCollection) UpdateOne(ctx context.Context, filter, update interfa
 	if err != nil {
 		return mongoUpdateResult{}, err
 	}
-	return mongoUpdateResult{ur: updateOneResult}, nil
+	return mongoUpdateResult{Ur: updateOneResult}, nil
 }
 
 func (sr *mongoSingleResult) Decode(v interface{}) error {
