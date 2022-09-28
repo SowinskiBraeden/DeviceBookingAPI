@@ -14,8 +14,8 @@ const cowName = "cows"
 type CowDatabase interface {
 	FindOne(ctx context.Context, filter interface{}) (*models.Cow, error)
 	Find(ctx context.Context, filter interface{}) ([]models.Cow, error)
-	InsertOne(ctx context.Context, filter interface{}) (mongoInsertOneResult, error)
-	UpdateOne(ctx context.Context, filter, document interface{}) (mongoUpdateResult, error)
+	InsertOne(ctx context.Context, document interface{}) (*mongoInsertOneResult, error)
+	UpdateOne(ctx context.Context, filter, document interface{}) (*mongoUpdateResult, error)
 }
 
 type cowDatabase struct {
@@ -48,18 +48,18 @@ func (c *cowDatabase) Find(ctx context.Context, filter interface{}) ([]models.Co
 }
 
 // Returns the result (document id) and error
-func (c *cowDatabase) InsertOne(ctx context.Context, document interface{}) (mongoInsertOneResult, error) {
+func (c *cowDatabase) InsertOne(ctx context.Context, document interface{}) (*mongoInsertOneResult, error) {
 	result, err := c.db.Collection(cowName).InsertOne(ctx, document)
 	if err != nil {
-		return mongoInsertOneResult{}, err
+		return nil, err
 	}
-	return result, nil
+	return &result, nil
 }
 
-func (c *cowDatabase) UpdateOne(ctx context.Context, filter, update interface{}) (mongoUpdateResult, error) {
+func (c *cowDatabase) UpdateOne(ctx context.Context, filter, update interface{}) (*mongoUpdateResult, error) {
 	result, err := c.db.Collection(cowName).UpdateOne(ctx, filter, update)
 	if err != nil {
-		return mongoUpdateResult{}, err
+		return nil, err
 	}
-	return result, nil
+	return &result, nil
 }
