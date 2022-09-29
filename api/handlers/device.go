@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"reflect"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -132,16 +133,37 @@ func (d Device) NewDeviceHandler(w http.ResponseWriter, r *http.Request) {
 
 // UpdateCowHandler gets updates the data for an existing cow and returns a result and error
 func (d Device) UpdateDeviceHandler(w http.ResponseWriter, r *http.Request) {
-	deviceID := mux.Vars(r)["cow_id"]
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	var newDetails models.DeviceDetails // Json data will represent the cow details model
+	defer cancel()
 
-	// TODO: Collect data to update from passed json
-	update := bson.M{
-		"$set": bson.M{
-			"cow.CowCode": "123",
-		},
+	deviceID := mux.Vars(r)["device_id"]
+
+	// validate the request body
+	if err := json.NewDecoder(r.Body).Decode(&newDetails); err != nil {
+		config.ErrorStatus("failed to unpack request body", http.StatusInternalServerError, w, err)
+		return
 	}
 
-	dbResp, err := d.DB.UpdateOne(context.Background(), bson.M{"_id": deviceID}, update)
+	// use the validator library to validate required fields
+	if validationErr := validate.Struct(&newDetails); validationErr != nil {
+		config.ErrorStatus("invalid request body", http.StatusBadRequest, w, validationErr)
+		return
+	}
+
+	e := reflect.ValueOf(&newDetails).Elem()
+	var update bson.M = bson.M{}
+
+	// Only get provided values to update
+	for i := 0; i < e.NumField(); i++ {
+		varName := e.Type().Field(i).Name
+		varValue := e.Field(i).Interface()
+		if varValue != nil && varValue != "" {
+			update["Device."+varName] = varValue
+		}
+	}
+
+	dbResp, err := d.DB.UpdateOne(ctx, bson.M{"_id": deviceID}, bson.M{"$set": update})
 	if err != nil {
 		config.ErrorStatus("the device could not be updated", http.StatusNotFound, w, err)
 		return

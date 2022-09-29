@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"reflect"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -116,7 +117,6 @@ func (c Cow) NewCowHandler(w http.ResponseWriter, r *http.Request) {
 	// use the validator library to validate required fields
 	if validationErr := validate.Struct(&cowDetails); validationErr != nil {
 		config.ErrorStatus("invalid request body", http.StatusBadRequest, w, validationErr)
-
 		return
 	}
 
@@ -137,17 +137,39 @@ func (c Cow) NewCowHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // UpdateCowHandler gets updates the data for an existing cow and returns a result and error
+// This function can only handle updating Name, DeviceTotal, Collection
 func (c Cow) UpdateCowHandler(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	var newDetails models.CowDetails // Json data will represent the cow details model
+	defer cancel()
+
 	cowID := mux.Vars(r)["cow_id"]
 
-	// TODO: Collect data to update from passed json
-	update := bson.M{
-		"$set": bson.M{
-			"cow.CowCode": "123",
-		},
+	// validate the request body
+	if err := json.NewDecoder(r.Body).Decode(&newDetails); err != nil {
+		config.ErrorStatus("failed to unpack request body", http.StatusInternalServerError, w, err)
+		return
 	}
 
-	dbResp, err := c.DB.UpdateOne(context.Background(), bson.M{"_id": cowID}, update)
+	// use the validator library to validate required fields
+	if validationErr := validate.Struct(&newDetails); validationErr != nil {
+		config.ErrorStatus("invalid request body", http.StatusBadRequest, w, validationErr)
+		return
+	}
+
+	e := reflect.ValueOf(&newDetails).Elem()
+	var update bson.M = bson.M{}
+
+	// Only get provided values to update
+	for i := 0; i < e.NumField(); i++ {
+		varName := e.Type().Field(i).Name
+		varValue := e.Field(i).Interface()
+		if varValue != nil && varValue != "" && varName != "Bookings" && varName != "Devices" {
+			update["Cow."+varName] = varValue
+		}
+	}
+
+	dbResp, err := c.DB.UpdateOne(ctx, bson.M{"_id": cowID}, bson.M{"$set": update})
 	if err != nil {
 		config.ErrorStatus("the cow could not be updated", http.StatusNotFound, w, err)
 		return
