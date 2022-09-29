@@ -10,5 +10,5 @@ type Device struct {
 type DeviceDetails struct {
 	Type   string `json:"type"   bson:"Type"`   // eg. Laptop, Ipdad, etc
 	Name   string `json:"name"   bson:"Name"`   // eg. SULH-LAP-01
-	Parent string `json:"parent" bson:"Parent"` // Parent cow Mongo ID
+	Parent string `json:"parent" bson:"Parent"` // Parent cow ID
 }

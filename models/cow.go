@@ -13,7 +13,7 @@ type Cow struct {
 // BookDetails holds the checkout details
 type BookDetails struct {
 	Author  string             `json:"author"  bson:"Author"`  // User who booked
-	Devices []string           `json:"devices" bson:"Devices"` // Array of device mongo ID's
+	Devices []string           `json:"devices" bson:"Devices"` // Array of device ID's
 	Block   string             `json:"block"   bson:"Block"`   // Block that is booked
 	Date    primitive.DateTime `json:"date"    bson:"Date"`    // Date this booking occurs
 }
@@ -25,5 +25,5 @@ type CowDetails struct {
 	Collection  string        `json:"collection"  bson:"Collection"`  // eg. Laptop, Ipad, etc
 	DeviceTotal int           `json:"deviceTotal" bson:"DeviceTotal"` // # of devices in that cart collection
 	Bookings    []BookDetails `json:"bookings"    bson:"Bookings"`    // An array of all active bookings (send top 10)
-	Devices     []string      `json:"devices"     bson:"Devices"`     // Array of device mongo ID's
+	Devices     []string      `json:"devices"     bson:"Devices"`     // Array of device ID's
 }
