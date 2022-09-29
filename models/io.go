@@ -29,3 +29,8 @@ type MessageError struct {
 type Query struct {
 	Name string `json:"name"`
 }
+
+// NewDeviceToCow to add device object id to cow
+type NewDeviceToCow struct {
+	ID string `json:"_id"`
+}

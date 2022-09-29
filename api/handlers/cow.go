@@ -183,3 +183,38 @@ func (c Cow) UpdateCowHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(b)
 }
+
+func (c Cow) AddDeviceHandler(w http.ResponseWriter, r *http.Request) {
+	var newDevice models.NewDeviceToCow
+
+	cowID := mux.Vars(r)["cow_id"]
+
+	// validate the request body
+	if err := json.NewDecoder(r.Body).Decode(&newDevice); err != nil {
+		config.ErrorStatus("failed to unpack request body", http.StatusInternalServerError, w, err)
+		return
+	}
+
+	// use the validator library to validate required fields
+	if validationErr := validate.Struct(&newDevice); validationErr != nil {
+		config.ErrorStatus("invalid request body", http.StatusBadRequest, w, validationErr)
+		return
+	}
+
+	update := bson.M{
+		"cow.Devices": newDevice,
+	}
+
+	dbResp, err := c.DB.UpdateOne(context.TODO(), bson.M{"_id": cowID}, bson.M{"$push": update})
+	if err != nil {
+		config.ErrorStatus("the device could not be inserted into the cow", http.StatusNotFound, w, err)
+		return
+	}
+	b, err := json.Marshal(dbResp)
+	if err != nil {
+		config.ErrorStatus("failed ot marshal response", http.StatusInternalServerError, w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(b)
+}
