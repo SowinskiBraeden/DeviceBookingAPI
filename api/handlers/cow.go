@@ -33,7 +33,7 @@ func (c Cow) CowHandler(w http.ResponseWriter, r *http.Request) {
 	if len(dbResp) == 0 {
 		dbResp = []models.Cow{}
 	}
-	b, err := json.Marshal(dbResp)
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"result": dbResp}})
 	if err != nil {
 		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
 		return
@@ -68,7 +68,7 @@ func (c Cow) CowHandlerQuery(w http.ResponseWriter, r *http.Request) {
 	if len(dbResp) == 0 {
 		dbResp = []models.Cow{}
 	}
-	b, err := json.Marshal(dbResp)
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"result": dbResp}})
 	if err != nil {
 		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
 		return
@@ -93,9 +93,9 @@ func (c Cow) CowByIDHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	b, err := json.Marshal(dbResp)
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"result": dbResp}})
 	if err != nil {
-		config.ErrorStatus("failed to marshal responce", http.StatusInternalServerError, w, err)
+		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -131,9 +131,13 @@ func (c Cow) NewCowHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"result": result}})
+	if err != nil {
+		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
+		return
+	}
 	w.WriteHeader(http.StatusCreated)
-	response := models.UserResponse{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"result": result}}
-	json.NewEncoder(w).Encode(response)
+	w.Write(b)
 }
 
 // UpdateCowHandler gets updates the data for an existing cow and returns a result and error
@@ -175,9 +179,9 @@ func (c Cow) UpdateCowHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	b, err := json.Marshal(dbResp)
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"result": dbResp}})
 	if err != nil {
-		config.ErrorStatus("failed ot marshal response", http.StatusInternalServerError, w, err)
+		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -210,9 +214,10 @@ func (c Cow) AddDeviceHandler(w http.ResponseWriter, r *http.Request) {
 		config.ErrorStatus("the device could not be inserted into the cow", http.StatusNotFound, w, err)
 		return
 	}
-	b, err := json.Marshal(dbResp)
+
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"result": dbResp}})
 	if err != nil {
-		config.ErrorStatus("failed ot marshal response", http.StatusInternalServerError, w, err)
+		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

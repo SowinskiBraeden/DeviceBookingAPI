@@ -33,7 +33,8 @@ func (d Device) DeviceHandler(w http.ResponseWriter, r *http.Request) {
 	if len(dbResp) == 0 {
 		dbResp = []models.Device{}
 	}
-	b, err := json.Marshal(dbResp)
+
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"result": dbResp}})
 	if err != nil {
 		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
 		return
@@ -60,7 +61,7 @@ func (d Device) DeviceHandlerQuery(w http.ResponseWriter, r *http.Request) {
 
 	dbResp, err := d.DB.Find(context.TODO(), bson.M{"detials.name": query.Name}) // Search by cow name
 	if err != nil {
-		config.ErrorStatus("failed to get cows", http.StatusNotFound, w, err)
+		config.ErrorStatus("failed to get cow(s)", http.StatusNotFound, w, err)
 		return
 	}
 
@@ -68,7 +69,8 @@ func (d Device) DeviceHandlerQuery(w http.ResponseWriter, r *http.Request) {
 	if len(dbResp) == 0 {
 		dbResp = []models.Device{}
 	}
-	b, err := json.Marshal(dbResp)
+
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"result": dbResp}})
 	if err != nil {
 		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
 		return
@@ -87,9 +89,9 @@ func (d Device) DeviceByIDHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	b, err := json.Marshal(dbResp)
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"result": dbResp}})
 	if err != nil {
-		config.ErrorStatus("failed to marshal responce", http.StatusInternalServerError, w, err)
+		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -111,7 +113,6 @@ func (d Device) NewDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	// use the validator library to validate required fields
 	if validationErr := validate.Struct(&deviceDetails); validationErr != nil {
 		config.ErrorStatus("invalid request body", http.StatusBadRequest, w, validationErr)
-
 		return
 	}
 
@@ -122,13 +123,17 @@ func (d Device) NewDeviceHandler(w http.ResponseWriter, r *http.Request) {
 
 	result, err := d.DB.InsertOne(ctx, newDevice)
 	if err != nil {
-		config.ErrorStatus("failed to insert device", http.StatusBadRequest, w, err)
+		config.ErrorStatus("failed to insert device", http.StatusInternalServerError, w, err)
 		return
 	}
 
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"result": result}})
+	if err != nil {
+		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
+		return
+	}
 	w.WriteHeader(http.StatusCreated)
-	response := models.UserResponse{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"result": result}}
-	json.NewEncoder(w).Encode(response)
+	w.Write(b)
 }
 
 // UpdateCowHandler gets updates the data for an existing cow and returns a result and error
@@ -169,9 +174,9 @@ func (d Device) UpdateDeviceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	b, err := json.Marshal(dbResp)
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"result": dbResp}})
 	if err != nil {
-		config.ErrorStatus("failed ot marshal response", http.StatusInternalServerError, w, err)
+		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
