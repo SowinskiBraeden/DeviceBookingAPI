@@ -16,7 +16,6 @@ import (
 	"github.com/SowinskiBraeden/SulliCartShare/models"
 )
 
-// Cow exported for testing purposes
 type Device struct {
 	DB databases.DeviceDatabase
 }
