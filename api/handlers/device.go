@@ -181,3 +181,38 @@ func (d Device) UpdateDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(b)
 }
+
+// Is able to get child devices with a prodived Cow Model
+func (d Device) GetChildDevices(w http.ResponseWriter, r *http.Request) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	var parentCow models.Cow // Json data will represent the cow details model
+	defer cancel()
+
+	// validate the request body
+	if err := json.NewDecoder(r.Body).Decode(&parentCow); err != nil {
+		config.ErrorStatus("failed to unpack request body", http.StatusInternalServerError, w, err)
+		return
+	}
+
+	// use the validator library to validate required fields
+	if validationErr := validate.Struct(&parentCow); validationErr != nil {
+		config.ErrorStatus("invalid request body", http.StatusBadRequest, w, validationErr)
+		return
+	}
+
+	devices := []models.Device{}
+
+	for _, deviceID := range parentCow.Details.Devices {
+		dbResp, _ := d.DB.FindOne(ctx, bson.M{"_id": deviceID})
+
+		devices = append(devices, *dbResp)
+	}
+
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"result": devices}})
+	if err != nil {
+		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(b)
+}
