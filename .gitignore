@@ -1,5 +1,3 @@
-# Environment variables
 .env
-
-# Vendor
 vendor*
+coverage.out
