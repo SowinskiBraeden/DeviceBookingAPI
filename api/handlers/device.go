@@ -58,7 +58,7 @@ func (d Device) DeviceHandlerQuery(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dbResp, err := d.DB.Find(context.TODO(), bson.M{"detials.name": query.Name}) // Search by cow name
+	dbResp, err := d.DB.Find(context.TODO(), bson.M{"detials.name": query.Name}) // Search by device name
 	if err != nil {
 		config.ErrorStatus("failed to get cow(s)", http.StatusNotFound, w, err)
 		return
@@ -185,27 +185,14 @@ func (d Device) UpdateDeviceHandler(w http.ResponseWriter, r *http.Request) {
 // Is able to get child devices with a prodived Cow Model
 func (d Device) GetChildDevices(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	var parentCow models.Cow // Json data will represent the cow details model
+	cowID := mux.Vars(r)["cow_id"]
 	defer cancel()
 
-	// validate the request body
-	if err := json.NewDecoder(r.Body).Decode(&parentCow); err != nil {
-		config.ErrorStatus("failed to unpack request body", http.StatusInternalServerError, w, err)
-		return
-	}
+	devices, _ := d.DB.Find(ctx, bson.M{"detials.parent": cowID})
 
-	// use the validator library to validate required fields
-	if validationErr := validate.Struct(&parentCow); validationErr != nil {
-		config.ErrorStatus("invalid request body", http.StatusBadRequest, w, validationErr)
-		return
-	}
-
-	devices := []models.Device{}
-
-	for _, deviceID := range parentCow.Details.Devices {
-		dbResp, _ := d.DB.FindOne(ctx, bson.M{"_id": deviceID})
-
-		devices = append(devices, *dbResp)
+	// If there is no devices from the query, return empty device array.
+	if len(devices) == 0 {
+		devices = []models.Device{}
 	}
 
 	b, err := json.Marshal(models.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"result": devices}})
