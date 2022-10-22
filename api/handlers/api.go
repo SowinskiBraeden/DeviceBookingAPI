@@ -68,7 +68,7 @@ func (a *App) Initialize() error {
 		zap.S().With(err).Error("failed to connect to database")
 		return err
 	}
-	zap.S().Info("SulliCartCheckout has connected to the database")
+	zap.S().Info("SulliCartShare has connected to the database")
 
 	// initialize api router
 	a.initializeRoutes()
