@@ -205,7 +205,7 @@ func (c Cow) AddDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	update := bson.M{
-		"cow.Devices": newDevice,
+		"Cow.Devices": newDevice,
 	}
 
 	dbResp, err := c.DB.UpdateOne(context.TODO(), bson.M{"_id": cowID}, bson.M{"$push": update})

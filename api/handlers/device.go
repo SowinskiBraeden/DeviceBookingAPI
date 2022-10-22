@@ -163,7 +163,7 @@ func (d Device) UpdateDeviceHandler(w http.ResponseWriter, r *http.Request) {
 		varName := e.Type().Field(i).Name
 		varValue := e.Field(i).Interface()
 		if varValue != nil && varValue != "" {
-			update["Details."+varName] = varValue
+			update["Device."+varName] = varValue
 		}
 	}
 
@@ -188,7 +188,7 @@ func (d Device) GetChildDevices(w http.ResponseWriter, r *http.Request) {
 	cowID := mux.Vars(r)["cow_id"]
 	defer cancel()
 
-	devices, _ := d.DB.Find(ctx, bson.M{"Detials.Parent": cowID})
+	devices, _ := d.DB.Find(ctx, bson.M{"Device.Parent": cowID})
 
 	// If there is no devices from the query, return empty device array.
 	if len(devices) == 0 {

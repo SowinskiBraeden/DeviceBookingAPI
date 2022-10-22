@@ -3,7 +3,7 @@ package models
 // Device holds the structure for the device collection in mongo
 type Device struct {
 	ID      string        `json:"_id"    bson:"_id"`    // MongoDB ID
-	Details DeviceDetails `json:"device" bson:"Details"` // Details
+	Details DeviceDetails `json:"device" bson:"Device"` // Details
 }
 
 // Device holds the structure for the Device collection in mongo
