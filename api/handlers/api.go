@@ -36,6 +36,7 @@ func (a *App) New() *mux.Router {
 
 	apiCreate := r.PathPrefix("/api/v1").Subrouter()
 
+	// Data handlers, create, delete, update etc.
 	apiCreate.Handle("/cow/{cow_id}", api.Middleware(http.HandlerFunc(cow.CowByIDHandler))).Methods("GET")                       // By Object ID not Cow Name
 	apiCreate.Handle("/cows", api.Middleware(http.HandlerFunc(cow.CowHandler))).Methods("GET")                                   // Returns all cows
 	apiCreate.Handle("/cows", api.Middleware(http.HandlerFunc(cow.CowHandlerQuery))).Methods("POST")                             // Returns list of cows based of name query
@@ -49,6 +50,9 @@ func (a *App) New() *mux.Router {
 	apiCreate.Handle("/devices", api.Middleware(http.HandlerFunc(device.DeviceHandlerQuery))).Methods("POST")                     // Returns list of devices based of name query
 	apiCreate.Handle("/devices/new", api.Middleware(http.HandlerFunc(device.NewDeviceHandler))).Methods("POST")                   // create new device
 	apiCreate.Handle("/devices/update/{device_id}", api.Middleware(http.HandlerFunc(device.UpdateDeviceHandler))).Methods("POST") // Update Device by Object ID
+
+	// Booking handling
+	apiCreate.Handle("/cow/book/{cow_id}", api.Middleware(http.HandlerFunc(cow.BookingHandler))).Methods("POST") // Add booking to cow by ID
 
 	return r
 }

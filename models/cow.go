@@ -12,10 +12,11 @@ type Cow struct {
 
 // BookDetails holds the checkout details
 type BookDetails struct {
-	Author  string             `json:"author"  bson:"Author"`  // User who booked
-	Devices []string           `json:"devices" bson:"Devices"` // Array of device ID's
-	Block   string             `json:"block"   bson:"Block"`   // Block that is booked
-	Date    primitive.DateTime `json:"date"    bson:"Date"`    // Date this booking occurs
+	Author    string             `json:"author"    bson:"Author"`    // User who booked
+	Devices   []string           `json:"devices"   bson:"Devices"`   // Array of device ID's
+	Block     string             `json:"block"     bson:"Block"`     // Block that is booked
+	StartDate primitive.DateTime `json:"startdate" bson:"StartDate"` // Date this booking occurs
+	EndDate   primitive.DateTime `json:"enddate"   bson:"EndDate"`   // Date this booking ends
 }
 
 // CowDetails holds the structure for the inner cow structure as
