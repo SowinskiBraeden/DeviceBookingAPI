@@ -8,6 +8,7 @@ import (
 func Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Do Authentication stuff?
+		// use r.URL to get url
 		next.ServeHTTP(w, r)
 	})
 }
