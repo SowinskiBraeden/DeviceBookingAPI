@@ -44,6 +44,7 @@ func (a *App) New() *mux.Router {
 	apiCreate.Handle("/cows/update/{cow_id}", api.Middleware(http.HandlerFunc(cow.UpdateCowHandler))).Methods("POST")        // Update Cow by Object ID
 	apiCreate.Handle("/cows/add_device/{cow_id}", api.Middleware(http.HandlerFunc(cow.AddDeviceHandler))).Methods("POST")    // Add Device to cow device list
 	apiCreate.Handle("/cows/get_devices/{cow_id}", api.Middleware(http.HandlerFunc(device.GetChildDevices))).Methods("POST") // Returns a list of devices from a given Cow obj
+	apiCreate.Handle("cows/bookings/{cow_id}", api.Middleware(http.HandlerFunc(cow.GetBookingsHandler))).Methods("GET")      // Returns all bookings for a given cow
 
 	apiCreate.Handle("/device/{device_id}", api.Middleware(http.HandlerFunc(device.DeviceByIDHandler))).Methods("GET")            // By Object ID not Device Name
 	apiCreate.Handle("/devices", api.Middleware(http.HandlerFunc(device.DeviceHandler))).Methods("GET")                           // Returns all devices

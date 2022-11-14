@@ -222,3 +222,27 @@ func (c Cow) AddDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(b)
 }
+
+func (c Cow) GetBookingsHandler(w http.ResponseWriter, r *http.Request) {
+	cowID := mux.Vars(r)["cow_id"]
+
+	cID, err := primitive.ObjectIDFromHex(cowID)
+	if err != nil {
+		config.ErrorStatus("failed to get objectID from Hex", http.StatusBadRequest, w, err)
+		return
+	}
+
+	dbResp, err := c.DB.FindOne(context.Background(), bson.M{"_id": cID})
+	if err != nil {
+		config.ErrorStatus("failed to get cow by ID", http.StatusNotFound, w, err)
+		return
+	}
+
+	b, err := json.Marshal(models.UserResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"result": dbResp.Details.Bookings}})
+	if err != nil {
+		config.ErrorStatus("failed to marshal response", http.StatusInternalServerError, w, err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(b)
+}
