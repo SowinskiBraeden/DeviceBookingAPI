@@ -37,13 +37,13 @@ func (a *App) New() *mux.Router {
 	apiCreate := r.PathPrefix("/api/v1").Subrouter()
 
 	// Data handlers, create, delete, update etc.
-	apiCreate.Handle("/cow/{cow_id}", api.Middleware(http.HandlerFunc(cow.CowByIDHandler))).Methods("GET")                       // By Object ID not Cow Name
-	apiCreate.Handle("/cows", api.Middleware(http.HandlerFunc(cow.CowHandler))).Methods("GET")                                   // Returns all cows
-	apiCreate.Handle("/cows", api.Middleware(http.HandlerFunc(cow.CowHandlerQuery))).Methods("POST")                             // Returns list of cows based of name query
-	apiCreate.Handle("/cows/new", api.Middleware(http.HandlerFunc(cow.NewCowHandler))).Methods("POST")                           // Create new cow
-	apiCreate.Handle("/cows/update/{cow_id}", api.Middleware(http.HandlerFunc(cow.UpdateCowHandler))).Methods("POST")            // Update Cow by Object ID
-	apiCreate.Handle("/cows/add/{cow_id}", api.Middleware(http.HandlerFunc(cow.AddDeviceHandler))).Methods("POST")               // Add Device to cow device list
-	apiCreate.Handle("/cows/getChildDevices/{cow_id}", api.Middleware(http.HandlerFunc(device.GetChildDevices))).Methods("POST") // Returns a list of devices from a given Cow obj
+	apiCreate.Handle("/cow/{cow_id}", api.Middleware(http.HandlerFunc(cow.CowByIDHandler))).Methods("GET")                   // By Object ID not Cow Name
+	apiCreate.Handle("/cows", api.Middleware(http.HandlerFunc(cow.CowHandler))).Methods("GET")                               // Returns all cows
+	apiCreate.Handle("/cows", api.Middleware(http.HandlerFunc(cow.CowHandlerQuery))).Methods("POST")                         // Returns list of cows based of name query
+	apiCreate.Handle("/cows/new", api.Middleware(http.HandlerFunc(cow.NewCowHandler))).Methods("POST")                       // Create new cow
+	apiCreate.Handle("/cows/update/{cow_id}", api.Middleware(http.HandlerFunc(cow.UpdateCowHandler))).Methods("POST")        // Update Cow by Object ID
+	apiCreate.Handle("/cows/add_device/{cow_id}", api.Middleware(http.HandlerFunc(cow.AddDeviceHandler))).Methods("POST")    // Add Device to cow device list
+	apiCreate.Handle("/cows/get_devices/{cow_id}", api.Middleware(http.HandlerFunc(device.GetChildDevices))).Methods("POST") // Returns a list of devices from a given Cow obj
 
 	apiCreate.Handle("/device/{device_id}", api.Middleware(http.HandlerFunc(device.DeviceByIDHandler))).Methods("GET")            // By Object ID not Device Name
 	apiCreate.Handle("/devices", api.Middleware(http.HandlerFunc(device.DeviceHandler))).Methods("GET")                           // Returns all devices
