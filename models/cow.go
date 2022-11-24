@@ -12,6 +12,7 @@ type Cow struct {
 
 // BookDetails holds the checkout details
 type BookDetails struct {
+	ID        string             `json:"id"        bson:"ID"`        // Generated ID -> cow_id.random_str
 	Author    string             `json:"author"    bson:"Author"`    // User who booked
 	Devices   []string           `json:"devices"   bson:"Devices"`   // Array of device ID's
 	Block     string             `json:"block"     bson:"Block"`     // Block that is booked

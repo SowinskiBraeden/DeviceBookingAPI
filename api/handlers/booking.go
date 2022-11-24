@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -12,6 +13,7 @@ import (
 	"github.com/SowinskiBraeden/SulliCartShare/config"
 	"github.com/SowinskiBraeden/SulliCartShare/models"
 	"github.com/gorilla/mux"
+	"github.com/thanhpk/randstr"
 )
 
 func (c Cow) BookingHandler(w http.ResponseWriter, r *http.Request) {
@@ -38,6 +40,8 @@ func (c Cow) BookingHandler(w http.ResponseWriter, r *http.Request) {
 		config.ErrorStatus("failed to get objectID from Hex", http.StatusBadRequest, w, err)
 		return
 	}
+
+	bookingDetails.ID = fmt.Sprintf("%s.%s", cowID, randstr.Hex(16))
 
 	dbResp, err := c.DB.UpdateOne(ctx, bson.M{"_id": cID}, bson.M{"$push": bson.M{"Cow.Bookings": bookingDetails}})
 	if err != nil {

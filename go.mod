@@ -6,6 +6,7 @@ require (
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/gorilla/mux v1.8.0
 	github.com/joho/godotenv v1.4.0
+	github.com/thanhpk/randstr v1.0.4
 	go.mongodb.org/mongo-driver v1.10.2
 	go.uber.org/zap v1.23.0
 )
