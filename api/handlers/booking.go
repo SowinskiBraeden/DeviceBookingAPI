@@ -10,8 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/SowinskiBraeden/SulliCartShare/config"
-	"github.com/SowinskiBraeden/SulliCartShare/models"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/config"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/models"
 	"github.com/gorilla/mux"
 	"github.com/thanhpk/randstr"
 )

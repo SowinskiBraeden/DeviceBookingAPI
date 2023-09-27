@@ -1,4 +1,4 @@
-module github.com/SowinskiBraeden/SulliCartShare
+module github.com/SowinskiBraeden/DeviceBookingAPI
 
 go 1.19
 

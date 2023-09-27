@@ -5,7 +5,7 @@ package databases
 import (
 	"context"
 
-	"github.com/SowinskiBraeden/SulliCartShare/models"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/models"
 )
 
 const deviceName = "devices"

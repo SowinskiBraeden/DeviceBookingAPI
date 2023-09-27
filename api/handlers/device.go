@@ -11,16 +11,16 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/SowinskiBraeden/SulliCartShare/config"
-	"github.com/SowinskiBraeden/SulliCartShare/databases"
-	"github.com/SowinskiBraeden/SulliCartShare/models"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/config"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/databases"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/models"
 )
 
 type Device struct {
 	DB databases.DeviceDatabase
 }
 
-// CowHandler returns all cows
+// DeviceHandler returns all cows
 func (d Device) DeviceHandler(w http.ResponseWriter, r *http.Request) {
 	dbResp, err := d.DB.Find(context.TODO(), bson.M{})
 	if err != nil {
@@ -42,7 +42,7 @@ func (d Device) DeviceHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-// CowHandlerQuery is the same as CowHanlder, but queries a specific list of objects by Name
+// DeviceHandlerQuery is the same as DeviceHandler, but queries a specific list of objects by Name
 func (d Device) DeviceHandlerQuery(w http.ResponseWriter, r *http.Request) {
 	var query models.Query // Json data will represent the query model
 
@@ -78,7 +78,7 @@ func (d Device) DeviceHandlerQuery(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-// CowByIDHandler returns a cow by ID
+// DeviceByIDHandler returns a cow by ID
 func (d Device) DeviceByIDHandler(w http.ResponseWriter, r *http.Request) {
 	deviceID := mux.Vars(r)["cow_id"]
 
@@ -97,7 +97,7 @@ func (d Device) DeviceByIDHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-// NewCowHandler inserts a new cow into the collection and returns a result and error
+// NewDeviceHandler inserts a new cow into the collection and returns a result and error
 func (d Device) NewDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	var deviceDetails models.DeviceDetails // Json data will represent the cow details model
@@ -135,7 +135,7 @@ func (d Device) NewDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 }
 
-// UpdateCowHandler gets updates the data for an existing cow and returns a result and error
+// UpdateDeviceHandler gets updates the data for an existing cow and returns a result and error
 func (d Device) UpdateDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	var newDetails models.DeviceDetails // Json data will represent the cow details model

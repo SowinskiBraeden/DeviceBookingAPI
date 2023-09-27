@@ -8,7 +8,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/SowinskiBraeden/SulliCartShare/models"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/models"
 	"github.com/joho/godotenv"
 )
 

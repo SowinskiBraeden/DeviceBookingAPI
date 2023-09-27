@@ -6,8 +6,8 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/SowinskiBraeden/SulliCartShare/api/handlers"
-	"github.com/SowinskiBraeden/SulliCartShare/config"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/api/handlers"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/config"
 )
 
 func main() {
@@ -20,6 +20,6 @@ func main() {
 		return
 	}
 
-	zap.S().Infow("SulliCartShare is up and running", "url", a.Config.BaseURL, "port", a.Config.Port)
+	zap.S().Infow("DeviceBookingAPI is up and running", "url", a.Config.BaseURL, "port", a.Config.Port)
 	log.Fatal(http.ListenAndServe(":"+a.Config.Port, a.Router))
 }

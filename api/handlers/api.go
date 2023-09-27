@@ -5,14 +5,14 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/SowinskiBraeden/SulliCartShare/api"
-	"github.com/SowinskiBraeden/SulliCartShare/models"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/api"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/models"
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 
-	"github.com/SowinskiBraeden/SulliCartShare/config"
-	"github.com/SowinskiBraeden/SulliCartShare/databases"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/config"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/databases"
 )
 
 var validate = validator.New()
@@ -73,7 +73,7 @@ func (a *App) Initialize() error {
 		zap.S().With(err).Error("failed to connect to database")
 		return err
 	}
-	zap.S().Info("SulliCartShare has connected to the database")
+	zap.S().Info("DeviceBookingAPI has connected to the database")
 
 	// initialize api router
 	a.initializeRoutes()

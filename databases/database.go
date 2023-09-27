@@ -6,7 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
-	"github.com/SowinskiBraeden/SulliCartShare/config"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/config"
 )
 
 // DatabaseHelper contains the collection and client to be used to access the methods

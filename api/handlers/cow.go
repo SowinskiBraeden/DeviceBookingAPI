@@ -11,9 +11,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	"github.com/SowinskiBraeden/SulliCartShare/config"
-	"github.com/SowinskiBraeden/SulliCartShare/databases"
-	"github.com/SowinskiBraeden/SulliCartShare/models"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/config"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/databases"
+	"github.com/SowinskiBraeden/DeviceBookingAPI/models"
 )
 
 type Cow struct {
