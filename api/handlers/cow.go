@@ -77,7 +77,7 @@ func (c Cow) CowHandlerQuery(w http.ResponseWriter, r *http.Request) {
 }
 
 // CowByIDHandler returns a cow by ID
-func (c Cow) CowByIDHandler(w http.ResponseWriter, r *http.Request) {
+func (c Cow) CowByObjectIDHandler(w http.ResponseWriter, r *http.Request) {
 	cowID := mux.Vars(r)["cow_id"]
 
 	cID, err := primitive.ObjectIDFromHex(cowID)

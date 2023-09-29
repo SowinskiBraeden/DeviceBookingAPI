@@ -8,7 +8,7 @@ import (
 	"github.com/SowinskiBraeden/DeviceBookingAPI/models"
 )
 
-const deviceName = "devices"
+const deviceDBO = "devices"
 
 // DeviceDatabase contains the methods to use with the cow database
 type DeviceDatabase interface {
@@ -31,7 +31,7 @@ func NewDeviceDatabase(db DatabaseHelper) DeviceDatabase {
 
 func (d *deviceDatabase) FindOne(ctx context.Context, filter interface{}) (*models.Device, error) {
 	device := &models.Device{}
-	err := d.db.Collection(deviceName).FindOne(ctx, filter).Decode(&device)
+	err := d.db.Collection(deviceDBO).FindOne(ctx, filter).Decode(&device)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func (d *deviceDatabase) FindOne(ctx context.Context, filter interface{}) (*mode
 
 func (d *deviceDatabase) Find(ctx context.Context, filter interface{}) ([]models.Device, error) {
 	var devices []models.Device
-	err := d.db.Collection(deviceName).FindOne(ctx, filter).Decode(&devices)
+	err := d.db.Collection(deviceDBO).FindOne(ctx, filter).Decode(&devices)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (d *deviceDatabase) Find(ctx context.Context, filter interface{}) ([]models
 }
 
 func (d *deviceDatabase) InsertOne(ctx context.Context, document interface{}) (*mongoInsertOneResult, error) {
-	result, err := d.db.Collection(deviceName).InsertOne(ctx, document)
+	result, err := d.db.Collection(deviceDBO).InsertOne(ctx, document)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ func (d *deviceDatabase) InsertOne(ctx context.Context, document interface{}) (*
 }
 
 func (d *deviceDatabase) UpdateOne(ctx context.Context, filter, update interface{}) (*mongoUpdateResult, error) {
-	result, err := d.db.Collection(deviceName).UpdateOne(ctx, filter, update)
+	result, err := d.db.Collection(deviceDBO).UpdateOne(ctx, filter, update)
 	if err != nil {
 		return nil, err
 	}

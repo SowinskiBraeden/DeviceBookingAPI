@@ -8,7 +8,7 @@ import (
 	"github.com/SowinskiBraeden/DeviceBookingAPI/models"
 )
 
-const cowName = "cows"
+const cowDBO = "cows"
 
 // CowDatabase contains the methods to use with the cow database
 type CowDatabase interface {
@@ -31,7 +31,7 @@ func NewCowDatabase(db DatabaseHelper) CowDatabase {
 
 func (c *cowDatabase) FindOne(ctx context.Context, filter interface{}) (*models.Cow, error) {
 	cow := &models.Cow{}
-	err := c.db.Collection(cowName).FindOne(ctx, filter).Decode(&cow)
+	err := c.db.Collection(cowDBO).FindOne(ctx, filter).Decode(&cow)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func (c *cowDatabase) FindOne(ctx context.Context, filter interface{}) (*models.
 
 func (c *cowDatabase) Find(ctx context.Context, filter interface{}) ([]models.Cow, error) {
 	var cows []models.Cow
-	err := c.db.Collection(cowName).Find(ctx, filter).Decode(&cows)
+	err := c.db.Collection(cowDBO).Find(ctx, filter).Decode(&cows)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (c *cowDatabase) Find(ctx context.Context, filter interface{}) ([]models.Co
 
 // Returns the result (document id) and error
 func (c *cowDatabase) InsertOne(ctx context.Context, document interface{}) (*mongoInsertOneResult, error) {
-	result, err := c.db.Collection(cowName).InsertOne(ctx, document)
+	result, err := c.db.Collection(cowDBO).InsertOne(ctx, document)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *cowDatabase) InsertOne(ctx context.Context, document interface{}) (*mon
 }
 
 func (c *cowDatabase) UpdateOne(ctx context.Context, filter, update interface{}) (*mongoUpdateResult, error) {
-	result, err := c.db.Collection(cowName).UpdateOne(ctx, filter, update)
+	result, err := c.db.Collection(cowDBO).UpdateOne(ctx, filter, update)
 	if err != nil {
 		return nil, err
 	}

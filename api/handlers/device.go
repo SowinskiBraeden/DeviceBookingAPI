@@ -79,12 +79,12 @@ func (d Device) DeviceHandlerQuery(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeviceByIDHandler returns a cow by ID
-func (d Device) DeviceByIDHandler(w http.ResponseWriter, r *http.Request) {
-	deviceID := mux.Vars(r)["cow_id"]
+func (d Device) DeviceByObjectIDHandler(w http.ResponseWriter, r *http.Request) {
+	deviceID := mux.Vars(r)["device_id"]
 
 	dbResp, err := d.DB.FindOne(context.Background(), bson.M{"_id": deviceID})
 	if err != nil {
-		config.ErrorStatus("failed to get device by ID", http.StatusNotFound, w, err)
+		config.ErrorStatus("failed to get device by ObjectID", http.StatusNotFound, w, err)
 		return
 	}
 
@@ -100,7 +100,7 @@ func (d Device) DeviceByIDHandler(w http.ResponseWriter, r *http.Request) {
 // NewDeviceHandler inserts a new cow into the collection and returns a result and error
 func (d Device) NewDeviceHandler(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	var deviceDetails models.DeviceDetails // Json data will represent the cow details model
+	var deviceDetails models.DeviceDetails // Json data will represent the device details model
 	defer cancel()
 
 	// validate the request body
